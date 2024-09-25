@@ -1,7 +1,7 @@
 import React from 'react';
 import { Drawer, List, ListItem, ListItemText, Toolbar, Box, Typography, Divider } from '@mui/material';
 import { Link } from 'react-router-dom';
-import NavBar from './NavBar.jsx'; 
+import NavBar from './NavBar'; 
 import HomeIcon from '@mui/icons-material/Home';
 import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 import CategoryIcon from '@mui/icons-material/Category';
@@ -11,6 +11,7 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
 const drawerWidth = 240;
 
+// Menü öğeleri
 const menuItems = [
   { text: 'Home', icon: <HomeIcon />, path: '/' },
   { text: 'Publishers', icon: <LibraryBooksIcon />, path: '/publishers' },
@@ -33,9 +34,8 @@ const Layout = ({ children }) => {
           [`& .MuiDrawer-paper`]: { 
             width: drawerWidth, 
             boxSizing: 'border-box', 
-            backgroundColor: '#F4F6F8',
-            borderRight: '1px solid #E0E0E0',
-            paddingTop: '20px',
+            backgroundColor: '#f5f5dc', // Yan menü için açık kahverengi (beige)
+            borderRight: '2px solid #d2b48c' // Yan menü ile içerik arasındaki çizgi
           },
         }}
       >
@@ -48,16 +48,21 @@ const Layout = ({ children }) => {
                 key={item.text} 
                 component={Link} 
                 to={item.path} 
-                sx={{ '&:hover': { backgroundColor: '#E0E0E0' } }}
+                sx={{
+                  '&:hover': {
+                    backgroundColor: '#d2b48c', // Üzerine gelindiğinde açık kahverengi
+                  }
+                }}
               >
-                <ListItemText 
-                  primary={
-                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                      {item.icon}
-                      <Typography variant="body1" sx={{ marginLeft: '10px' }}>{item.text}</Typography>
-                    </Box>
-                  } 
-                />
+                <Box sx={{ display: 'flex', alignItems: 'center', color: '#8b4513' }}>
+                  {item.icon}
+                  <Typography 
+                    variant="body1" 
+                    sx={{ marginLeft: '10px', fontWeight: 'bold', color: '#8b4513' }}
+                  >
+                    {item.text}
+                  </Typography>
+                </Box>
               </ListItem>
             ))}
           </List>
@@ -71,7 +76,7 @@ const Layout = ({ children }) => {
       </Drawer>
       
       <Box component="main" sx={{ flexGrow: 1, bgcolor: '#f0f2f5', padding: 3 }}>
-        <Toolbar /> {/* Boşluk bırakmak için */}
+        <Toolbar />
         {children}
       </Box>
     </Box>
