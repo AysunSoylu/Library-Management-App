@@ -1,20 +1,96 @@
-body {
+/* Body ve HTML öğesini tam ekran kaplayacak şekilde ayarlayın */
+html, body {
   margin: 0;
-  font-family: 'Roboto', sans-serif;
-  background-color: #af6b30;
-  
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #faf3e0; /* Sayfanın arka plan rengini açık krem tonu yap */
+  overflow-x: hidden; /* Yana kaymayı engellemek için yatay taşmayı gizle */
+  font-family: 'Roboto', sans-serif; /* Varsayılan yazı tipi */
 }
 
+/* root elemanını tam ekran kaplayacak şekilde ayarlayın */
 #root {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  min-height: 100vh; /* Ekran yüksekliğini kaplar */
+  width: 100vw; /* Tüm genişliği kapla */
+  overflow-x: hidden; /* Yana kaymayı engellemek için yatay taşmayı gizle */
+  align-items: center; /* İçeriği yatayda ortala */
+  justify-content: center; /* İçeriği dikeyde ortala */
+  background-color: #faf3e0; /* Sayfanın arka plan rengini açık krem tonu yap */
 }
 
-h1, h2, h3, h4, h5, h6 {
-  margin: 0;
+/* Tüm elemanlar için kenar boşluklarını düzenler */
+* {
+  box-sizing: border-box; 
 }
 
-button {
-  font-family: 'Roboto', sans-serif;
+/* Sayfa içerikleri için genel stil */
+.container {
+  width: 100%;
+  max-width: 1600px; /* İçerik genişliğini sınırla */
+  margin: 20px auto; /* Üstten ve alttan boşluk */
+  padding: 20px;
+  background-color: #6f5933; /* İçerik alanları beyaz arka plan */
+  border-radius: 10px; /* Hafif yuvarlatılmış köşeler */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Hafif gölge efekti */
+  overflow-y: auto; /* Dikey kaydırmayı etkinleştir */
+}
+
+/* Navbar ve yan menü için stil */
+.navbar {
+  width: 100%;
+  background-color: #d2b48c; /* Açık kahverengi */
+}
+
+.drawer {
+  width: 240px; /* Yan menü genişliği */
+  background-color: #f5f5dc; /* Yan menü arka plan rengi */
+  border-right: 1px solid #d2b48c; /* Yan menü ile içerik arasındaki çizgi */
+}
+
+/* Butonlar için stil */
+.button {
+  background-color: #d2b48c; /* Açık kahverengi tonları */
+  color: #fff; /* Yazı rengi beyaz */
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.button:hover {
+  background-color: #8b4513; /* Üzerine gelindiğinde koyu kahverengi */
+}
+
+/* Modal (Dialog) penceresi için stil */
+.dialog {
+  background-color: #faf3e0; /* Modal penceresi arka plan krem rengi */
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.dialog-header {
+  background-color: #8b4513; /* Başlık arka plan rengi */
+  color: #fff; /* Başlık yazı rengi */
+  padding: 10px;
+}
+
+.dialog-content {
+  background-color: #fff; /* İçerik arka plan rengi */
+  padding: 20px;
+  border-radius: 5px;
+}
+
+/* Tablo başlıkları için stil */
+.table-head {
+  background-color: #d2b48c; /* Tablo başlık arka plan rengi */
+}
+
+.table-cell {
+  font-weight: bold; 
+  color: #4b3621; /* Tablo başlık yazı rengi */
 }

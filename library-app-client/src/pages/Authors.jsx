@@ -11,10 +11,10 @@ const Authors = () => {
   useEffect(() => {
     fetchAuthors();
   }, []);
-
+  const BASE_URL = import.meta.env.VITE_REACT_APP_LIBRARY_APP_BASE_URL;
   const fetchAuthors = async () => {
     try {
-      const response = await axios.get('YOUR_BACKEND_API_URL/authors');
+      const response = await axios.get(BASE_URL+ '/authors');
       setAuthors(response.data);
     } catch (error) {
       console.error("Error fetching authors", error);
@@ -72,7 +72,8 @@ const Authors = () => {
         <TableHead>
           <TableRow>
             <TableCell>Name</TableCell>
-            <TableCell>Bio</TableCell>
+            <TableCell>Birth Date</TableCell>
+            <TableCell>Country</TableCell>
             <TableCell>Actions</TableCell>
           </TableRow>
         </TableHead>
@@ -80,7 +81,8 @@ const Authors = () => {
           {authors.map((author) => (
             <TableRow key={author.id}>
               <TableCell>{author.name}</TableCell>
-              <TableCell>{author.bio}</TableCell>
+              <TableCell>{author.birthDate}</TableCell>
+              <TableCell>{author.country}</TableCell>
               <TableCell>
                 <Button onClick={() => handleOpenModal(author)}>Edit</Button>
                 <Button onClick={() => handleDeleteAuthor(author.id)}>Delete</Button>

@@ -8,13 +8,15 @@ const Publishers = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [formState, setFormState] = useState({ name: '', country: '' });
 
+const BASE_URL = process.env.REACT_APP_LIBRARY_APP_BASE_URL;
+
   useEffect(() => {
     fetchPublishers();
   }, []);
 
   const fetchPublishers = async () => {
     try {
-      const response = await axios.get('YOUR_BACKEND_API_URL/publishers');
+      const response = await axios.get(`${BASE_URL}/publishers`);
       setPublishers(response.data);
     } catch (error) {
       console.error("Error fetching publishers", error);
@@ -72,7 +74,8 @@ const Publishers = () => {
         <TableHead>
           <TableRow>
             <TableCell>Name</TableCell>
-            <TableCell>Country</TableCell>
+            <TableCell>Establishment Year</TableCell>
+            <TableCell>Adress</TableCell>
             <TableCell>Actions</TableCell>
           </TableRow>
         </TableHead>
@@ -80,7 +83,8 @@ const Publishers = () => {
           {publishers.map((publisher) => (
             <TableRow key={publisher.id}>
               <TableCell>{publisher.name}</TableCell>
-              <TableCell>{publisher.country}</TableCell>
+              <TableCell>{publisher.establishmentYear}</TableCell>
+              <TableCell>{publisher.adress}</TableCell>
               <TableCell>
                 <Button onClick={() => handleOpenModal(publisher)}>Edit</Button>
                 <Button onClick={() => handleDeletePublisher(publisher.id)}>Delete</Button>

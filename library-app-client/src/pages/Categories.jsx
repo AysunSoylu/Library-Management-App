@@ -14,7 +14,7 @@ const Categories = () => {
 
   const fetchCategories = async () => {
     try {
-      const response = await axios.get('YOUR_BACKEND_API_URL/categories');
+      const response = await axios.get(import.meta.env.LIBRARY_APP_BASE_URL+'/categories');
       setCategories(response.data);
     } catch (error) {
       console.error("Error fetching categories", error);

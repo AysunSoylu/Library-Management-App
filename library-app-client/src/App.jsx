@@ -1,12 +1,14 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Home from './pages/Home.jsx'; // Home bileşenini içe aktarıyoruz
-import Publishers from './pages/Publishers.jsx'; // Publishers bileşenini içe aktarıyoruz
-import Categories from './pages/Categories.jsx'; // Categories bileşenini içe aktarıyoruz
-import Books from './pages/Books.jsx'; // Books bileşenini içe aktarıyoruz
-import Authors from './pages/Authors.jsx'; // Authors bileşenini içe aktarıyoruz
-import BookOrders from './pages/BookOrders.jsx'; // BookOrders bileşenini içe aktarıyoruz
-import Layout from './components/Layout.jsx'; // Layout bileşenini içe aktarıyoruz
+import Home from './pages/Home.jsx';
+import Publishers from './pages/Publishers.jsx';
+import Categories from './pages/Categories.jsx';
+import Books from './pages/Books.jsx';
+import Authors from './pages/Authors.jsx';
+import BookOrders from './pages/BookOrders.jsx';
+import About from './components/About.jsx';
+import Contact from './components/Contact.jsx';
+import Layout from './components/Layout.jsx';
 
 function App() {
   return (
@@ -18,10 +20,12 @@ function App() {
           <Route path="/books" element={<Books />} />
           <Route path="/authors" element={<Authors />} />
           <Route path="/book-orders" element={<BookOrders />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
         </Routes>
       </Layout>
+    
   );
 }
 
 export default App;
-

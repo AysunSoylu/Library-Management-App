@@ -71,18 +71,42 @@ const BookOrders = () => {
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>Book Title</TableCell>
-            <TableCell>Customer Name</TableCell>
-            <TableCell>Date</TableCell>
+            <TableCell>Borrower Name</TableCell>
+            <TableCell>borrowerMail</TableCell>
+            <TableCell>borrowingDate</TableCell>
+            <TableCell>returnDate</TableCell>
+            <TableCell>Book Name</TableCell>
+            <TableCell>Book publicationYear</TableCell>
+            <TableCell>Book Stock</TableCell>
+            <TableCell>Book Autor Name</TableCell>
+            <TableCell>Book Autor Birth Date </TableCell>
+            <TableCell>Book Autor Country</TableCell>
+            <TableCell>Publisher Name</TableCell>
+            <TableCell>Publisher Establishment Year</TableCell>
+            <TableCell>Publisher Address</TableCell>
+            <TableCell>Categories Name</TableCell>
+            <TableCell>Categories Description</TableCell>
             <TableCell>Actions</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {orders.map((order) => (
             <TableRow key={order.id}>
-              <TableCell>{order.bookTitle}</TableCell>
-              <TableCell>{order.customerName}</TableCell>
-              <TableCell>{order.date}</TableCell>
+              <TableCell>{order.borrowerName}</TableCell>
+              <TableCell>{order.borrowerMail}</TableCell>
+              <TableCell>{order.borrowingDate}</TableCell>
+              <TableCell>{order.returnDate}</TableCell>
+              <TableCell>{order.book.name}</TableCell>
+              <TableCell>{order.book.publicationYear}</TableCell>
+              <TableCell>{order.book.stock}</TableCell>
+              <TableCell>{order.book.author.name}</TableCell>
+              <TableCell>{order.book.author.birthDate}</TableCell>
+              <TableCell>{order.book.author.country}</TableCell>
+              <TableCell>{order.publisher.name}</TableCell>
+              <TableCell>{order.publisher.establishmentYear}</TableCell>
+              <TableCell>{order.publisher.address}</TableCell>
+              <TableCell>{order.categories.name}</TableCell>
+              <TableCell>{order.categories.description}</TableCell>
               <TableCell>
                 <Button onClick={() => handleOpenModal(order)}>Edit</Button>
                 <Button onClick={() => handleDeleteOrder(order.id)}>Delete</Button>
