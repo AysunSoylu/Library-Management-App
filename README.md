@@ -1,110 +1,144 @@
-Library Management System - Frontend
-This project is a web application designed for library management, allowing users to handle operations such as managing books, authors, publishers, and categories, as well as handling book borrowing and return processes. This documentation focuses on the frontend part of the system, built with React, and explains its setup, features, and structure.
-
-live link
+# live link
 https://main--monumental-starlight-a8c6ee.netlify.app
 
-Technologies Used
-React: For building the user interface.
-Material-UI: For modern UI components.
-Axios: For handling HTTP requests.
-React-Router: For routing and navigation.
-React Hooks: For state management and lifecycle methods.
-Node.js & npm: For package management and development tools.
-Setup Instructions
-1. Clone the Repository
-bash
 
-git clone https://github.com/gorbadil/LibraryAppReact.git
-cd LibraryAppReact
-2. Install Dependencies
-bash
 
-npm install
-3. Start the Project
-bash
+# Library App
 
-npm start
-By default, the application will run at http://localhost:3000.
+This is a full-stack library management application built using React.js and Vite for the frontend. It provides features such as managing books, authors, categories, publishers, and borrowing records for a library. This application is designed to be simple, fast, and efficient for managing library operations.
 
-Features
-Manage Books: Add, update, or delete books along with their stock, publication year, and associated categories, authors, and publishers.
-Manage Authors: Add, update, or delete authors with details such as name, birthdate, and country.
-Manage Publishers: Add, update, or delete publishers with details like name, establishment year, and address.
-Manage Categories: Add, update, or delete categories with name and description.
-Book Borrowing: Handle book borrowing and return processes with borrower details, borrowing and return dates.
-Frontend Structure
-The frontend project is structured into several components for easier management:
+## Table of Contents
 
-Pages:
+- [Features](#features)
+- [Technologies Used](#technologies-used)
+- [Getting Started](#getting-started)
+- [Scripts](#scripts)
+- [Folder Structure](#folder-structure)
+- [API Endpoints](#api-endpoints)
+- [Screenshots](#screenshots)
+- [License](#license)
 
-BooksPage.js: Displays a list of books, allows adding, editing, and deleting books.
-AuthorsPage.js: Displays a list of authors, allows adding, editing, and deleting authors.
-CategoriesPage.js: Displays a list of categories, allows adding, editing, and deleting categories.
-PublishersPage.js: Displays a list of publishers, allows adding, editing, and deleting publishers.
-BorrowsPage.js: Displays book borrow records, allows adding and managing borrow operations.
-Components:
+## Features
 
-BookForm.js, AuthorForm.js, etc.: Reusable form components for adding and editing records.
-NavBar.js: Navigation bar for easy access between different sections of the system.
-Table.js: Generic table component for displaying lists of items with actions like edit and delete.
-APIs:
+- **Authors Management**: Add, update, and delete authors.
+- **Publishers Management**: Add, update, and delete publishers.
+- **Books Management**: Add, update, and delete books.
+- **Categories Management**: Add, update, and delete categories.
+- **Borrowing Management**: Record when books are borrowed and returned.
 
-Axios is used to interact with the backend RESTful API. Example endpoints include:
-/api/v1/books
-/api/v1/authors
-/api/v1/categories
-/api/v1/publishers
-/api/v1/borrows
-State Management:
+## Technologies Used
 
-Each page uses React's useState and useEffect hooks to manage local state and fetch data from the API.
-Axios is used to make GET, POST, PUT, and DELETE requests to the backend API for each resource.
-API Endpoints (For Frontend Integration)
-Here are the key API endpoints that the frontend interacts with:
+- **Frontend**: React.js (with Vite as the bundler)
+- **UI Framework**: Material-UI (MUI)
+- **Styling**: Custom themes with Material-UI
 
-Authors
-Endpoint	HTTP Method	Description
-/api/v1/authors/{id}	GET	Fetch author by ID
-/api/v1/authors/{id}	PUT	Update author by ID
-/api/v1/authors/{id}	DELETE	Delete author by ID
-/api/v1/authors	GET	Fetch all authors
-/api/v1/authors	POST	Add a new author
-Publishers
-Endpoint	HTTP Method	Description
-/api/v1/publishers/{id}	GET	Fetch publisher by ID
-/api/v1/publishers/{id}	PUT	Update publisher by ID
-/api/v1/publishers/{id}	DELETE	Delete publisher by ID
-/api/v1/publishers	GET	Fetch all publishers
-/api/v1/publishers	POST	Add a new publisher
-Categories
-Endpoint	HTTP Method	Description
-/api/v1/categories/{id}	GET	Fetch category by ID
-/api/v1/categories/{id}	PUT	Update category by ID
-/api/v1/categories/{id}	DELETE	Delete category by ID
-/api/v1/categories	GET	Fetch all categories
-/api/v1/categories	POST	Add a new category
-Books
-Endpoint	HTTP Method	Description
-/api/v1/books/{id}	GET	Fetch book by ID
-/api/v1/books/{id}	PUT	Update book by ID
-/api/v1/books/{id}	DELETE	Delete book by ID
-/api/v1/books	GET	Fetch all books
-/api/v1/books	POST	Add a new book
-Borrowing
-Endpoint	HTTP Method	Description
-/api/v1/borrows/{id}	GET	Fetch borrow record by ID
-/api/v1/borrows/{id}	PUT	Update borrow record by ID
-/api/v1/borrows/{id}	DELETE	Delete borrow record by ID
-/api/v1/borrows	GET	Fetch all borrow records
-/api/v1/borrows	POST	Add a new borrow record
-How to Use the Frontend
-Navigating the App:
+## Getting Started
 
-The navigation bar allows you to quickly switch between the Books, Authors, Publishers, Categories, and Borrows sections.
-CRUD Operations:
+To get a local copy up and running, follow these simple steps.
 
-Each section allows you to create, update, and delete records. Forms are used for adding or editing, and tables display the current records in the system.
-Book Borrowing:
+### Prerequisites
 
-In the "Borrows" section, you can manage the borrowing and return process for books. This section is directly linked with the book and borrower data.
+- **Node.js**: Ensure you have Node.js installed (version 14.x or higher).
+
+### Installation
+
+1. **Clone the repository**:
+
+    ```bash
+    git clone https://github.com/yourusername/library-app.git
+    ```
+
+2. **Navigate to the project directory**:
+
+    ```bash
+    cd capstone
+    ```
+
+3. **Install dependencies**:
+
+    ```bash
+    npm install
+    ```
+
+4. **Set up environment variables**:
+
+    Create a `.env` file in the root directory and add your MongoDB connection string:
+
+    ```
+    VITE_REACT_APP_LIBRARY_APP_BASE_URL=http://localhost:8080/api/v1
+    ```
+
+5. **Run the development server**:
+
+    ```bash
+    npm run dev
+    ```
+## Scripts
+
+- **Start Development Server**: `npm run dev` - Starts the app in development mode.
+- **Build for Production**: `npm run build` - Builds the app for production.
+- **Preview Production Build**: `npm run preview` - Serves the production build locally.
+
+## Folder Structure
+
+```
+capstone-project/
+├── src/                 # React application source code
+│   ├── components/      # React components
+│   ├── pages/           # React pages
+│   └── main.jsx         # Entry point for the React app
+│
+├── .env                 # Environment variables
+├── vite.config.js       # Vite configuration
+├── package.json         # Dependencies and scripts
+└── README.md            # Project documentation
+```
+
+## API Endpoints
+
+The following API endpoints are assumed for the backend. Ensure that these endpoints exist in your backend API:
+
+- **Authors**
+  - `GET /authors` - Retrieve all authors.
+  - `POST /authors` - Add a new author.
+  - `PUT /authors/:id` - Update an author by ID.
+  - `DELETE /authors/:id` - Delete an author by ID.
+
+- **Publishers**
+  - `GET /publishers` - Retrieve all publishers.
+  - `POST /publishers` - Add a new publisher.
+  - `PUT /publishers/:id` - Update a publisher by ID.
+  - `DELETE /publishers/:id` - Delete a publisher by ID.
+
+- **Books**
+  - `GET /books` - Retrieve all books.
+  - `POST /books` - Add a new book.
+  - `PUT /books/:id` - Update a book by ID.
+  - `DELETE /books/:id` - Delete a book by ID.
+
+- **Categories**
+  - `GET /categories` - Retrieve all categories.
+  - `POST /categories` - Add a new category.
+  - `PUT /categories/:id` - Update a category by ID.
+  - `DELETE /categories/:id` - Delete a category by ID.
+
+- **Borrows**
+  - `GET /borrows` - Retrieve all borrow records.
+  - `POST /borrows` - Add a new borrow record.
+  - `PUT /borrows/:id` - Update a borrow record by ID.
+  - `DELETE /borrows/:id` - Delete a borrow record by ID.
+
+## Screenshots
+
+### Home 
+![alt text](image-1.png)
+
+
+### Authors Management
+![Authors Page]
+![alt text](image.png)
+
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
