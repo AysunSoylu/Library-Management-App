@@ -41,7 +41,7 @@ const Publishers = () => {
   const [errorMessage, setErrorMessage] = useState(null); // state for error message
   const [validationMessage, setValidationMessage] = useState(''); // state for validation message
 
-  const BASE_URL = 'http://localhost:8080/api/v1';
+  const BASE_URL = import.meta.env.VITE_REACT_APP_LIBRARY_APP_BASE_URL;
 
   useEffect(() => {
     fetchPublishers();
