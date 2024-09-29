@@ -37,25 +37,25 @@ const theme = createTheme({
 
 const Borrows = () => {
   const [borrows, setBorrows] = useState([]);
-  const [books, setBooks] = useState([]); // Kitap listesini saklayacak state
+  const [books, setBooks] = useState([]);
   const [selectedBorrow, setSelectedBorrow] = useState(null);
   const [isModalOpen, setModalOpen] = useState(false);
+  const [isEditMode, setEditMode] = useState(false); // Edit modunu belirlemek için state
   const [formState, setFormState] = useState({
     borrowerName: '',
     borrowerMail: '',
     borrowingDate: '',
-    bookForBorrowingRequest: {
-      id: ''
-    }
+    bookForBorrowingRequest: { id: '' },
+    returnDate: ''
   });
-  const [errorMessage, setErrorMessage] = useState(null); // Hata mesajı için state
-  const [validationMessage, setValidationMessage] = useState(''); // Validasyon mesajı için state
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [validationMessage, setValidationMessage] = useState('');
 
   const BASE_URL = 'http://localhost:8080/api/v1';
 
   useEffect(() => {
     fetchBorrows();
-    fetchBooks(); // Kitapları çekme fonksiyonunu çağırıyoruz
+    fetchBooks();
   }, []);
   
   const fetchBorrows = async () => {
@@ -70,7 +70,7 @@ const Borrows = () => {
 
   const fetchBooks = async () => {
     try {
-      const response = await axios.get(`${BASE_URL}/books`); // Kitapları çekiyoruz
+      const response = await axios.get(`${BASE_URL}/books`);
       setBooks(response.data);
     } catch (error) {
       setErrorMessage("Error fetching books");
@@ -79,91 +79,82 @@ const Borrows = () => {
   };
 
   const handleOpenModal = (borrow = null) => {
-    setSelectedBorrow(borrow);
-    setFormState(
-      borrow
-        ? {
-            borrowerName: borrow.borrowerName,
-            borrowerMail: borrow.borrowerMail,
-            borrowingDate: borrow.borrowingDate,
-            bookForBorrowingRequest: {
-              id: borrow.book.id
-            }
-          }
-        : {
-            borrowerName: '',
-            borrowerMail: '',
-            borrowingDate: new Date,
-            bookForBorrowingRequest: {
-              id: ''
-            }
-          }
-    );
+    if (borrow) {
+      setEditMode(true); // Edit moduna geç
+      setSelectedBorrow(borrow);
+      setFormState({
+        borrowerName: borrow.borrowerName,
+        borrowingDate: borrow.borrowingDate,
+        returnDate: borrow.returnDate
+      });
+    } else {
+      setEditMode(false); // Create moduna geç
+      setSelectedBorrow(null);
+      setFormState({
+        borrowerName: '',
+        borrowerMail: '',
+        borrowingDate: new Date().toISOString().split("T")[0],
+        bookForBorrowingRequest: { id: '' },
+        returnDate: ''
+      });
+    }
     setModalOpen(true);
   };
 
   const handleCloseModal = () => {
     setSelectedBorrow(null);
     setModalOpen(false);
-    setValidationMessage(''); // Modal kapatıldığında validasyon mesajını sıfırla
+    setValidationMessage('');
   };
 
   const handleFormChange = (e) => {
     const { name, value } = e.target;
-    if (name === 'bookId') {
-      setFormState({
-        ...formState,
-        bookForBorrowingRequest: {
-          ...formState.bookForBorrowingRequest,
-          id: value
-        },
-      });
-    } else {
-      setFormState({
-        ...formState,
-        [name]: value,
-      });
-    }
+    setFormState((prevFormState) => ({
+      ...prevFormState,
+      [name]: value,
+    }));
+  };
+
+  const handleBookChange = (e) => {
+    const { value } = e.target;
+    setFormState((prevFormState) => ({
+      ...prevFormState,
+      bookForBorrowingRequest: { id: value },
+    }));
   };
 
   const handleSaveBorrow = async () => {
-    // Validasyon: Alanların boş olup olmadığını kontrol et
-    if (!formState.borrowerName || !formState.borrowerMail || !formState.borrowingDate || !formState.bookForBorrowingRequest.id) {
-      setValidationMessage('All fields are required.'); // Hata mesajını ayarla
-      return; // Fonksiyondan çık
+    if (!formState.borrowerName || !formState.borrowingDate || (!isEditMode && !formState.bookForBorrowingRequest.id)) {
+      setValidationMessage('All required fields must be filled.');
+      return;
     }
 
-    // Boş string değerlerin gönderilmemesi için kontrol
-    if (formState.borrowerName.trim() === '' || formState.borrowerMail.trim() === '') {
-      setValidationMessage('String values cannot be empty.'); // Hata mesajını ayarla
-      return; // Fonksiyondan çık
+    if (formState.borrowerName.trim() === '') {
+      setValidationMessage('Borrower name cannot be empty.');
+      return;
     }
 
     try {
-      const saveData = {
-        borrowerName: formState.borrowerName,
-        borrowerMail: formState.borrowerMail,
-        borrowingDate: formState.borrowingDate,
-        bookForBorrowingRequest: {
-          id: formState.bookForBorrowingRequest.id
-        }
-      };
-      
-      console.log('Save Data:', saveData); // Gönderilen veriyi kontrol etmek için
-
-      if (selectedBorrow) {
-        // Güncelleme işlemi
-        const response = await axios.put(`${BASE_URL}/borrows/${selectedBorrow.id}`, saveData);
-        console.log('Update Response:', response.data); // Güncelleme sonrası dönen veriyi logla
+      if (isEditMode) {
+        const updateData = {
+          borrowerName: formState.borrowerName,
+          borrowingDate: formState.borrowingDate,
+          returnDate: formState.returnDate,
+        };
+        await axios.put(`${BASE_URL}/borrows/${selectedBorrow.id}`, updateData);
       } else {
-        // Ekleme işlemi
-        const response = await axios.post(`${BASE_URL}/borrows`, saveData);
-        console.log('Create Response:', response.data); // Ekleme sonrası dönen veriyi logla
+        const createData = {
+          borrowerName: formState.borrowerName,
+          borrowerMail: formState.borrowerMail,
+          borrowingDate: formState.borrowingDate,
+          bookForBorrowingRequest: { id: formState.bookForBorrowingRequest.id },
+        };
+        await axios.post(`${BASE_URL}/borrows`, createData);
       }
-      fetchBorrows(); // Verileri yeniden çek
+      fetchBorrows();
       handleCloseModal();
     } catch (error) {
-      setErrorMessage("Error saving borrow: " + error.response?.data?.message || error.message); // Hata mesajını ayarla
+      setErrorMessage("Error saving borrow: " + error.response?.data?.message || error.message);
       console.error("Error saving borrow:", error);
     }
   };
@@ -171,7 +162,7 @@ const Borrows = () => {
   const handleDeleteBorrow = async (id) => {
     try {
       await axios.delete(`${BASE_URL}/borrows/${id}`);
-      fetchBorrows(); // Verileri yeniden çek
+      fetchBorrows();
     } catch (error) {
       setErrorMessage("Error deleting borrow");
       console.error("Error deleting borrow", error);
@@ -191,10 +182,8 @@ const Borrows = () => {
           <TableHead>
             <TableRow>
               <TableCell>Borrower Name</TableCell>
-              <TableCell>Borrower Mail</TableCell>
               <TableCell>Borrowing Date</TableCell>
               <TableCell>Return Date</TableCell>
-              <TableCell>Book Name</TableCell>
               <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
@@ -202,10 +191,8 @@ const Borrows = () => {
             {borrows.map((borrow) => (
               <TableRow key={borrow.id}>
                 <TableCell>{borrow.borrowerName}</TableCell>
-                <TableCell>{borrow.borrowerMail}</TableCell>
                 <TableCell>{borrow.borrowingDate}</TableCell>
                 <TableCell>{borrow.returnDate}</TableCell>
-                <TableCell>{borrow.book.name}</TableCell>
                 <TableCell>
                   <Button variant="outlined" color="primary" onClick={() => handleOpenModal(borrow)}>Edit</Button>
                   <Button variant="outlined" color="secondary" onClick={() => handleDeleteBorrow(borrow.id)}>Delete</Button>
@@ -227,14 +214,6 @@ const Borrows = () => {
               margin="normal"
             />
             <TextField
-              name="borrowerMail"
-              label="Borrower Mail"
-              value={formState.borrowerMail}
-              onChange={handleFormChange}
-              fullWidth
-              margin="normal"
-            />
-            <TextField
               name="borrowingDate"
               label="Borrowing Date"
               type="date"
@@ -244,27 +223,46 @@ const Borrows = () => {
               margin="normal"
               InputLabelProps={{ shrink: true }}
             />
-            {/* Kitap Seçimi için Select */}
-            <Select
-              name="bookId"
-              value={formState.bookForBorrowingRequest.id}
-              onChange={handleFormChange}
-              fullWidth
-              margin="normal"
-              displayEmpty
-              style={{ marginTop: '16px' }}
-            >
-              <MenuItem value="" disabled>
-                Select a Book
-              </MenuItem>
-              {books.map((book) => (
-                <MenuItem key={book.id} value={book.id}>
-                  {book.name}
-                </MenuItem>
-              ))}
-            </Select>
-            {/* Validasyon mesajını göster */}
-            {validationMessage && <div style={{ color: 'red' }}>{validationMessage}</div>}
+            {isEditMode && (
+              <TextField
+                name="returnDate"
+                label="Return Date"
+                type="date"
+                value={formState.returnDate}
+                onChange={handleFormChange}
+                fullWidth
+                margin="normal"
+                InputLabelProps={{ shrink: true }}
+              />
+            )}
+            {!isEditMode && (
+              <>
+                <TextField
+                  name="borrowerMail"
+                  label="Borrower Mail"
+                  value={formState.borrowerMail}
+                  onChange={handleFormChange}
+                  fullWidth
+                  margin="normal"
+                />
+                <Select
+                  name="bookForBorrowingRequest.id"
+                  value={formState.bookForBorrowingRequest.id}
+                  onChange={handleBookChange}
+                  fullWidth
+                  margin="normal"
+                  displayEmpty
+                  style={{ marginTop: '16px' }}
+                >
+                  <MenuItem value="" disabled>Select a Book</MenuItem>
+                  {books.map((book) => (
+                    <MenuItem key={book.id} value={book.id}>
+                      {book.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </>
+            )}
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCloseModal}>Cancel</Button>
@@ -272,7 +270,6 @@ const Borrows = () => {
           </DialogActions>
         </Dialog>
 
-        {/* Snackbar bileşeni */}
         <Snackbar open={!!errorMessage} autoHideDuration={6000} onClose={handleCloseSnackbar}>
           <Alert onClose={handleCloseSnackbar} severity="error">
             {errorMessage}
