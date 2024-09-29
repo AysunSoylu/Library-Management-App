@@ -6,11 +6,11 @@ const Contact = () => {
     <Container 
       maxWidth="md" 
       sx={{
-        backgroundColor: '#f5f5dc', // Arka plan rengi açık kahverengi
+        backgroundColor: '#f5f5dc', 
         borderRadius: '10px',
         padding: '20px',
         marginTop: '20px',
-        boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)' // Hafif gölge efekti
+        boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)' 
       }}
     >
       <Typography variant="h4" align="center" gutterBottom sx={{ color: '#8b4513' }}>
@@ -20,7 +20,7 @@ const Contact = () => {
         If you have any questions or feedback, feel free to reach out to us through the contact form below or via our contact information.
       </Typography>
       
-      {/* İletişim Formu */}
+      {/* Contact Form*/}
       <form>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6}>
@@ -88,7 +88,7 @@ const Contact = () => {
         </Box>
       </form>
       
-      {/* İletişim Bilgileri */}
+      {/* Contact Information */}
       <Box sx={{ marginTop: '30px' }}>
         <Typography variant="h6" sx={{ color: '#8b4513' }}>
           Contact Information

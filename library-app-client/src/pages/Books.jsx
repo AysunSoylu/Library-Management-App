@@ -38,7 +38,7 @@ const Books = () => {
     publisherId: '',
     publicationYear: 0,
     stock: 0,
-    selectedCategories: [] // Seçilen kategoriler için dizi
+    selectedCategories: [] // Array for selected categories
   });
   const [errorMessage, setErrorMessage] = useState(null);
   const [validationMessage, setValidationMessage] = useState('');
@@ -95,24 +95,24 @@ const Books = () => {
   const handleOpenModal = (book = null) => {
     setSelectedBook(book);
     if (book) {
-      // Seçilen kitabın detaylarını formState'e aktar
+      // Pass the details of the selected book to formState
       setFormState({
         title: book.name,
         authorId: book.author.id,
         publisherId: book.publisher.id,
         publicationYear: book.publicationYear,
         stock: book.stock,
-        selectedCategories: book.categories.map(category => category.id.toString()) // Seçili kategorileri al
+        selectedCategories: book.categories.map(category => category.id.toString()) 
       });
     } else {
-      // Yeni kitap ekleme durumu için formState'i sıfırla
+      // Reset formState for new book add state
       setFormState({
         title: '',
         authorId: '',
         publisherId: '',
         publicationYear: 0,
         stock: 0,
-        selectedCategories: [] // Seçili kategorileri sıfırla
+        selectedCategories: [] 
       });
     }
     setModalOpen(true);
@@ -121,7 +121,7 @@ const Books = () => {
   const handleCloseModal = () => {
     setSelectedBook(null);
     setModalOpen(false);
-    setValidationMessage(''); // Modal kapatıldığında validasyon mesajını sıfırla
+    setValidationMessage(''); 
   };
 
   const handleFormChange = (e) => {
@@ -132,21 +132,21 @@ const Books = () => {
   };
 
   const handleCategoryChange = (e) => {
-    const value = e.target.value; // Checkbox'ın değeri
+    const value = e.target.value; 
     setFormState((prevState) => ({
       ...prevState,
       selectedCategories: prevState.selectedCategories.includes(value)
-        ? prevState.selectedCategories.filter(categoryId => categoryId !== value) // Kategori zaten seçiliyse kaldır
-        : [...prevState.selectedCategories, value], // Kategori seçili değilse ekle
+        ? prevState.selectedCategories.filter(categoryId => categoryId !== value) 
+        : [...prevState.selectedCategories, value], 
     }));
   };
   
 
   const handleSaveBook = async () => {
-    // Validasyon: Alanların boş olup olmadığını kontrol et
+    // Validation: Check if fields are empty
     if (!formState.title.trim() || !formState.authorId || !formState.publisherId || !formState.publicationYear || !formState.stock) {
-      setValidationMessage('All fields are required.'); // Hata mesajını ayarla
-      return; // Fonksiyondan çık
+      setValidationMessage('All fields are required.'); 
+      return; 
     }
 
     try {
@@ -160,20 +160,20 @@ const Books = () => {
         publisher: {
           id: formState.publisherId
         },
-        categories: formState.selectedCategories.map(id => ({ id })) // Seçilen kategorileri ekle
+        categories: formState.selectedCategories.map(id => ({ id })) 
       };
 
       if (selectedBook) {
-        // Güncelleme işlemi
+        
         await axios.put(`${BASE_URL}/books/${selectedBook.id}`, bookData);
       } else {
-        // Ekleme işlemi
+       
         await axios.post(`${BASE_URL}/books`, bookData);
       }
-      fetchBooks(); // Verileri yeniden çek
+      fetchBooks(); 
       handleCloseModal();
     } catch (error) {
-      setErrorMessage("Error saving book"); // Hata mesajını set et
+      setErrorMessage("Error saving book"); 
       console.error("Error saving book", error);
     }
   };
@@ -181,9 +181,9 @@ const Books = () => {
   const handleDeleteBook = async (id) => {
     try {
       await axios.delete(`${BASE_URL}/books/${id}`);
-      fetchBooks(); // Verileri yeniden çek
+      fetchBooks(); 
     } catch (error) {
-      setErrorMessage("Error deleting book"); // Hata mesajını set et
+      setErrorMessage("Error deleting book"); 
       console.error("Error deleting book", error);
     }
   };
@@ -309,9 +309,9 @@ const Books = () => {
               key={category.id}
               control={
                 <Checkbox
-                  checked={formState.selectedCategories.includes(category.id.toString())} // Checkbox'ın durumu
-                  onChange={handleCategoryChange} // Checkbox değiştiğinde bu fonksiyonu çağır
-                  value={category.id.toString()} // Checkbox'ın değeri
+                  checked={formState.selectedCategories.includes(category.id.toString())} 
+                  onChange={handleCategoryChange} 
+                  value={category.id.toString()} 
                   color="primary"
                 />
               }
@@ -340,7 +340,7 @@ const Books = () => {
             margin="normal"
             sx={{ backgroundColor: '#fff', borderRadius: '5px' }}
           />
-          {/* Validasyon mesajını göster */}
+         
           {validationMessage && <div style={{ color: 'red' }}>{validationMessage}</div>}
         </DialogContent>
         <DialogActions sx={{ backgroundColor: '#faf3e0' }}>
@@ -358,7 +358,7 @@ const Books = () => {
         </DialogActions>
       </Dialog>
 
-      {/* Snackbar bileşeni */}
+      
       <Snackbar open={!!errorMessage} autoHideDuration={6000} onClose={handleCloseSnackbar}>
         <Alert onClose={handleCloseSnackbar} severity="error">
           {errorMessage}

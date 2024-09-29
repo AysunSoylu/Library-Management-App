@@ -2,7 +2,7 @@ import React from 'react';
 import { Container, Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 
 const About = () => {
-  // Örnek proje bilgileri
+  // sample project information
   const projectDetails = [
     { feature: 'Project Name', description: 'Book Management System' },
     { feature: 'Version', description: '1.0.0' },
@@ -15,11 +15,11 @@ const About = () => {
     <Container 
       maxWidth="md" 
       sx={{
-        backgroundColor: '#f5f5dc', // Arka plan rengi açık kahverengi
+        backgroundColor: '#f5f5dc', 
         borderRadius: '10px',
         padding: '20px',
         marginTop: '20px',
-        boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)' // Hafif gölge efekti
+        boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)' 
       }}
     >
       <Typography variant="h4" align="center" gutterBottom sx={{ color: '#8b4513' }}>
@@ -30,7 +30,7 @@ const About = () => {
         It provides an easy-to-use interface for users to keep track of their book collection and relevant information.
       </Typography>
       
-      {/* Proje Detayları Tablosu */}
+      {/* Project Details Table */}
       <TableContainer component={Paper} sx={{ marginTop: '20px' }}>
         <Table>
           <TableHead>
@@ -50,7 +50,7 @@ const About = () => {
         </Table>
       </TableContainer>
       
-      {/* Ekstra bilgiler için bir bölüm */}
+      {/* A section for extra information*/}
       <Box sx={{ marginTop: '20px' }}>
         <Typography variant="h6" sx={{ color: '#8b4513' }}>
           Future Plans

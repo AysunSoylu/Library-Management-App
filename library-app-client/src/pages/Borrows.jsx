@@ -24,13 +24,13 @@ import axios from 'axios';
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#6b4226', // Kahverengi ton
+      main: '#8b4513', // Koyu kahverengi
     },
     secondary: {
-      main: '#3e2723', // Daha koyu kahverengi
+      main: '#d32f2f', // Kırmızı ton (Silme butonları için)
     },
     background: {
-      default: '#f3e5ab', // Arka plan rengi
+      default: '#f5f5dc', // Krem rengi arka plan
     },
   },
 });
@@ -80,7 +80,7 @@ const Borrows = () => {
 
   const handleOpenModal = (borrow = null) => {
     if (borrow) {
-      setEditMode(true); // Edit moduna geç
+      setEditMode(true);
       setSelectedBorrow(borrow);
       setFormState({
         borrowerName: borrow.borrowerName,
@@ -88,7 +88,7 @@ const Borrows = () => {
         returnDate: borrow.returnDate
       });
     } else {
-      setEditMode(false); // Create moduna geç
+      setEditMode(false);
       setSelectedBorrow(null);
       setFormState({
         borrowerName: '',
@@ -175,16 +175,23 @@ const Borrows = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Container style={{ marginTop: '2rem', backgroundColor: '#f3e5ab', padding: '1rem', borderRadius: '8px' }}>
-        <h2 style={{ color: '#6b4226' }}>Book Borrows</h2>
-        <Button variant="contained" color="primary" onClick={() => handleOpenModal()}>Add New Borrow</Button>
-        <Table style={{ marginTop: '1rem' }}>
-          <TableHead>
+      <Container sx={{ backgroundColor: '#f5f5dc', padding: '20px', borderRadius: '10px', boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)', height: '700px', width: '1000px' }}>
+        <h2 style={{ color: '#8b4513', marginBottom: '20px' }}>Book Borrows</h2>
+        <Button 
+          variant="contained" 
+          color="primary" 
+          onClick={() => handleOpenModal()} 
+          sx={{ backgroundColor: '#8b4513', color: '#fff', '&:hover': { backgroundColor: '#5a3e2b' }, marginBottom: '20px' }}
+        >
+          Add New Borrow
+        </Button>
+        <Table sx={{ backgroundColor: '#fff', borderRadius: '10px', boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)' }}>
+          <TableHead sx={{ backgroundColor: '#e0d9b0' }}>
             <TableRow>
-              <TableCell>Borrower Name</TableCell>
-              <TableCell>Borrowing Date</TableCell>
-              <TableCell>Return Date</TableCell>
-              <TableCell>Actions</TableCell>
+              <TableCell sx={{ fontWeight: 'bold', color: '#4b3621' }}>Borrower Name</TableCell>
+              <TableCell sx={{ fontWeight: 'bold', color: '#4b3621' }}>Borrowing Date</TableCell>
+              <TableCell sx={{ fontWeight: 'bold', color: '#4b3621' }}>Return Date</TableCell>
+              <TableCell sx={{ fontWeight: 'bold', color: '#4b3621' }}>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -194,8 +201,18 @@ const Borrows = () => {
                 <TableCell>{borrow.borrowingDate}</TableCell>
                 <TableCell>{borrow.returnDate}</TableCell>
                 <TableCell>
-                  <Button variant="outlined" color="primary" onClick={() => handleOpenModal(borrow)}>Edit</Button>
-                  <Button variant="outlined" color="secondary" onClick={() => handleDeleteBorrow(borrow.id)}>Delete</Button>
+                  <Button 
+                    onClick={() => handleOpenModal(borrow)} 
+                    sx={{ color: '#fff', backgroundColor: '#8b4513', '&:hover': { backgroundColor: '#5a3e2b' }, marginRight: '10px' }}
+                  >
+                    Edit
+                  </Button>
+                  <Button 
+                    onClick={() => handleDeleteBorrow(borrow.id)} 
+                    sx={{ color: '#fff', backgroundColor: '#d32f2f', '&:hover': { backgroundColor: '#c62828' } }}
+                  >
+                    Delete
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}
@@ -203,8 +220,8 @@ const Borrows = () => {
         </Table>
 
         <Dialog open={isModalOpen} onClose={handleCloseModal}>
-          <DialogTitle>{selectedBorrow ? 'Edit Borrow' : 'Add New Borrow'}</DialogTitle>
-          <DialogContent>
+          <DialogTitle sx={{ backgroundColor: '#8b4513', color: '#fff' }}>{isEditMode ? 'Edit Borrow' : 'Add New Borrow'}</DialogTitle>
+          <DialogContent sx={{ backgroundColor: '#f5f5dc' }}>
             <TextField
               name="borrowerName"
               label="Borrower Name"
@@ -212,6 +229,7 @@ const Borrows = () => {
               onChange={handleFormChange}
               fullWidth
               margin="normal"
+              sx={{ backgroundColor: '#fff', borderRadius: '5px' }}
             />
             <TextField
               name="borrowingDate"
@@ -222,6 +240,7 @@ const Borrows = () => {
               fullWidth
               margin="normal"
               InputLabelProps={{ shrink: true }}
+              sx={{ backgroundColor: '#fff', borderRadius: '5px' }}
             />
             {isEditMode && (
               <TextField
@@ -233,6 +252,7 @@ const Borrows = () => {
                 fullWidth
                 margin="normal"
                 InputLabelProps={{ shrink: true }}
+                sx={{ backgroundColor: '#fff', borderRadius: '5px' }}
               />
             )}
             {!isEditMode && (
@@ -244,6 +264,7 @@ const Borrows = () => {
                   onChange={handleFormChange}
                   fullWidth
                   margin="normal"
+                  sx={{ backgroundColor: '#fff', borderRadius: '5px' }}
                 />
                 <Select
                   name="bookForBorrowingRequest.id"
@@ -252,7 +273,7 @@ const Borrows = () => {
                   fullWidth
                   margin="normal"
                   displayEmpty
-                  style={{ marginTop: '16px' }}
+                  sx={{ backgroundColor: '#fff', borderRadius: '5px' }}
                 >
                   <MenuItem value="" disabled>Select a Book</MenuItem>
                   {books.map((book) => (
@@ -264,9 +285,14 @@ const Borrows = () => {
               </>
             )}
           </DialogContent>
-          <DialogActions>
-            <Button onClick={handleCloseModal}>Cancel</Button>
-            <Button onClick={handleSaveBorrow} color="primary">Save</Button>
+          <DialogActions sx={{ backgroundColor: '#f5f5dc' }}>
+            <Button onClick={handleCloseModal} sx={{ color: '#8b4513' }}>Cancel</Button>
+            <Button 
+              onClick={handleSaveBorrow} 
+              sx={{ backgroundColor: '#8b4513', color: '#fff', '&:hover': { backgroundColor: '#5a3e2b' } }}
+            >
+              Save
+            </Button>
           </DialogActions>
         </Dialog>
 

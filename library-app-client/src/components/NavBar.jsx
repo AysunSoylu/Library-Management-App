@@ -9,13 +9,13 @@ const NavBar = () => {
       position="fixed" 
       sx={{ 
         zIndex: 1400, 
-        backgroundColor: '#d2b48c', // Açık kahverengi arka plan rengi
-        boxShadow: 'none', // Gölgeyi kaldırır
-        borderBottom: '2px solid #8b4513', // Alt kenarda koyu kahverengi bir çizgi ekler
+        backgroundColor: '#d2b48c', 
+        boxShadow: 'none', 
+        borderBottom: '2px solid #8b4513', 
       }}
     >
       <Toolbar>
-        {/* Sol kısımda bulunan simge */}
+        {/* Icon on the left */}
         <IconButton 
           edge="start" 
           color="inherit" 
@@ -23,37 +23,37 @@ const NavBar = () => {
           component={Link} 
           to="/"
           sx={{
-            marginRight: 2, // Simge ve yazı arasında boşluk
-            color: '#fff', // Simge rengi beyaz
+            marginRight: 2, 
+            color: '#fff', 
           }}
         >
           <MenuBookIcon />
         </IconButton>
 
-        {/* Başlık metni */}
+        {/* Title text*/}
         <Typography 
           variant="h6" 
           sx={{ 
             flexGrow: 1, 
-            fontWeight: 'bold', // Başlık yazısının kalınlığı
-            color: '#2c3e50', // Başlık yazısının rengi (koyu gri)
+            fontWeight: 'bold',
+            color: '#2c3e50', 
           }}
         >
           Book Management System
         </Typography>
 
-        {/* Sağ kısımda yer alacak butonlar */}
+        {/* Buttons on the right */}
         <Box>
           <Button 
             color="inherit" 
             component={Link} 
             to="/about"
             sx={{
-              color: '#2c3e50', // Buton metni rengi
-              backgroundColor: '#fff', // Buton arka planı
-              marginRight: 1, // Butonlar arasında boşluk
+              color: '#2c3e50', 
+              backgroundColor: '#fff', 
+              marginRight: 1, 
               '&:hover': {
-                backgroundColor: '#f5deb3', // Üzerine gelindiğinde açık kahverengi
+                backgroundColor: '#f5deb3', 
               }
             }}
           >

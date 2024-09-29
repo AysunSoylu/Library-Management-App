@@ -11,7 +11,7 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
 const drawerWidth = 240;
 
-// Menü öğeleri
+// menu items
 const menuItems = [
   { text: 'Home', icon: <HomeIcon />, path: '/' },
   { text: 'Publishers', icon: <LibraryBooksIcon />, path: '/publishers' },
@@ -34,8 +34,8 @@ const Layout = ({ children }) => {
           [`& .MuiDrawer-paper`]: { 
             width: drawerWidth, 
             boxSizing: 'border-box', 
-            backgroundColor: '#f5f5dc', // Yan menü için açık kahverengi (beige)
-            borderRight: '2px solid #d2b48c' // Yan menü ile içerik arasındaki çizgi
+            backgroundColor: '#f5f5dc', 
+            borderRight: '2px solid #d2b48c' 
           },
         }}
       >
@@ -50,7 +50,7 @@ const Layout = ({ children }) => {
                 to={item.path} 
                 sx={{
                   '&:hover': {
-                    backgroundColor: '#d2b48c', // Üzerine gelindiğinde açık kahverengi
+                    backgroundColor: '#d2b48c', 
                   }
                 }}
               >
