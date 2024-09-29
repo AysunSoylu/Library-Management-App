@@ -5,7 +5,7 @@ import Publishers from './pages/Publishers.jsx';
 import Categories from './pages/Categories.jsx';
 import Books from './pages/Books.jsx';
 import Authors from './pages/Authors.jsx';
-import BookOrders from './pages/BookOrders.jsx';
+import Borrows from './pages/Borrows.jsx';
 import About from './components/About.jsx';
 import Contact from './components/Contact.jsx';
 import Layout from './components/Layout.jsx';
@@ -19,7 +19,7 @@ function App() {
           <Route path="/categories" element={<Categories />} />
           <Route path="/books" element={<Books />} />
           <Route path="/authors" element={<Authors />} />
-          <Route path="/book-orders" element={<BookOrders />} />
+          <Route path="/borrows" element={<Borrows />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
         </Routes>

@@ -36,16 +36,21 @@ public class CategoryService {
     public Category update(Long id, Category request) {
 
         Optional<Category> categoryFromDb = categoryRepository.findById(id);
-
-        Optional<Category> isCategoryExist = categoryRepository.findByName(request.getName());
-
         if (categoryFromDb.isEmpty()) {
             throw new RuntimeException(id + "Güncellemeye çalıştığınız kategori sistemde bulunamadı. !!!.");
         }
 
-        if (isCategoryExist.isPresent()) {
-            throw new RuntimeException("Bu kategori daha önce sisteme kayıt olmuştur !!!");
+        if(categoryFromDb.get().getName()!=request.getName())
+        {
+            Optional<Category> isCategoryExist = categoryRepository.findByName(request.getName());
+            if (isCategoryExist.isPresent()) {
+                    throw new RuntimeException("Bu kategori daha önce sisteme kayıt olmuştur !!!");
+                }
         }
+
+
+
+   
         request.setId(id);
         return categoryRepository.save(request);
     }

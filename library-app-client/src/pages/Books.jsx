@@ -1,38 +1,127 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Button, Table, TableBody, TableCell, TableHead, TableRow, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Box, Typography } from '@mui/material';
+import { 
+  Container, 
+  Button, 
+  Table, 
+  TableBody, 
+  TableCell, 
+  TableHead, 
+  TableRow, 
+  Dialog, 
+  DialogTitle, 
+  DialogContent, 
+  DialogActions, 
+  TextField, 
+  Box, 
+  Typography, 
+  MenuItem, 
+  Select, 
+  InputLabel, 
+  FormControl, 
+  Snackbar, 
+  Alert, 
+  Checkbox, 
+  FormControlLabel 
+} from '@mui/material';
 import axios from 'axios';
 
 const Books = () => {
   const [books, setBooks] = useState([]);
+  const [authors, setAuthors] = useState([]);
+  const [publishers, setPublishers] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [selectedBook, setSelectedBook] = useState(null);
   const [isModalOpen, setModalOpen] = useState(false);
-  const [formState, setFormState] = useState({ title: '', author: '', category: '', publisher: '' });
+  const [formState, setFormState] = useState({
+    title: '',
+    authorId: '',
+    publisherId: '',
+    publicationYear: 0,
+    stock: 0,
+    selectedCategories: [] // Seçilen kategoriler için dizi
+  });
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [validationMessage, setValidationMessage] = useState('');
 
   const BASE_URL = import.meta.env.VITE_REACT_APP_LIBRARY_APP_BASE_URL;
 
   useEffect(() => {
-    // Backend'den kitapları çek
     fetchBooks();
+    fetchAuthors();
+    fetchPublishers();
+    fetchCategories();
   }, []);
 
   const fetchBooks = async () => {
     try {
-      const response = await axios.get(BASE_URL+ '/books');
+      const response = await axios.get(`${BASE_URL}/books`);
       setBooks(response.data);
     } catch (error) {
+      setErrorMessage("Error fetching books");
       console.error("Error fetching books", error);
+    }
+  };
+
+  const fetchAuthors = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/authors`);
+      setAuthors(response.data);
+    } catch (error) {
+      setErrorMessage("Error fetching authors");
+      console.error("Error fetching authors", error);
+    }
+  };
+
+  const fetchPublishers = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/publishers`);
+      setPublishers(response.data);
+    } catch (error) {
+      setErrorMessage("Error fetching publishers");
+      console.error("Error fetching publishers", error);
+    }
+  };
+
+  const fetchCategories = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/categories`);
+      setCategories(response.data);
+    } catch (error) {
+      setErrorMessage("Error fetching categories");
+      console.error("Error fetching categories", error);
     }
   };
 
   const handleOpenModal = (book = null) => {
     setSelectedBook(book);
-    setFormState(book || { title: '', author: '', category: '', publisher: '' });
+    if (book) {
+      // Seçilen kitabın detaylarını formState'e aktar
+      setFormState({
+        title: book.name,
+        authorId: book.author.id,
+        publisherId: book.publisher.id,
+        publicationYear: book.publicationYear,
+        stock: book.stock,
+        selectedCategories: book.categories.map(category => category.id.toString()) // Seçili kategorileri al
+      });
+    } else {
+      // Yeni kitap ekleme durumu için formState'i sıfırla
+      setFormState({
+        title: '',
+        authorId: '',
+        publisherId: '',
+        publicationYear: 0,
+        stock: 0,
+        selectedCategories: [] // Seçili kategorileri sıfırla
+      });
+    }
     setModalOpen(true);
   };
 
   const handleCloseModal = () => {
     setSelectedBook(null);
     setModalOpen(false);
+    setValidationMessage(''); // Modal kapatıldığında validasyon mesajını sıfırla
   };
 
   const handleFormChange = (e) => {
@@ -42,29 +131,65 @@ const Books = () => {
     });
   };
 
+  const handleCategoryChange = (e) => {
+    const value = e.target.value; // Checkbox'ın değeri
+    setFormState((prevState) => ({
+      ...prevState,
+      selectedCategories: prevState.selectedCategories.includes(value)
+        ? prevState.selectedCategories.filter(categoryId => categoryId !== value) // Kategori zaten seçiliyse kaldır
+        : [...prevState.selectedCategories, value], // Kategori seçili değilse ekle
+    }));
+  };
+  
+
   const handleSaveBook = async () => {
+    // Validasyon: Alanların boş olup olmadığını kontrol et
+    if (!formState.title.trim() || !formState.authorId || !formState.publisherId || !formState.publicationYear || !formState.stock) {
+      setValidationMessage('All fields are required.'); // Hata mesajını ayarla
+      return; // Fonksiyondan çık
+    }
+
     try {
+      const bookData = {
+        name: formState.title,
+        publicationYear: formState.publicationYear,
+        stock: formState.stock,
+        author: {
+          id: formState.authorId
+        },
+        publisher: {
+          id: formState.publisherId
+        },
+        categories: formState.selectedCategories.map(id => ({ id })) // Seçilen kategorileri ekle
+      };
+
       if (selectedBook) {
         // Güncelleme işlemi
-        await axios.put(`${process.env.REACT_APP_LIBRARY_APP_BASE_URL}/books/${selectedBook.id}`, formState);
+        await axios.put(`${BASE_URL}/books/${selectedBook.id}`, bookData);
       } else {
         // Ekleme işlemi
-        await axios.post(process.env.REACT_APP_LIBRARY_APP_BASE_URL + '/books', formState);
+        await axios.post(`${BASE_URL}/books`, bookData);
       }
       fetchBooks(); // Verileri yeniden çek
       handleCloseModal();
     } catch (error) {
+      setErrorMessage("Error saving book"); // Hata mesajını set et
       console.error("Error saving book", error);
     }
   };
 
   const handleDeleteBook = async (id) => {
     try {
-      await axios.delete(`${process.env.REACT_APP_LIBRARY_APP_BASE_URL}/books/${id}`);
+      await axios.delete(`${BASE_URL}/books/${id}`);
       fetchBooks(); // Verileri yeniden çek
     } catch (error) {
+      setErrorMessage("Error deleting book"); // Hata mesajını set et
       console.error("Error deleting book", error);
     }
+  };
+
+  const handleCloseSnackbar = () => {
+    setErrorMessage(null);
   };
 
   return (
@@ -89,13 +214,8 @@ const Books = () => {
             <TableCell sx={{ fontWeight: 'bold', color: '#4b3621' }}>Publication Year</TableCell>
             <TableCell sx={{ fontWeight: 'bold', color: '#4b3621' }}>Stock</TableCell>
             <TableCell sx={{ fontWeight: 'bold', color: '#4b3621' }}>Author</TableCell>
-            <TableCell sx={{ fontWeight: 'bold', color: '#4b3621' }}>Author Birth Date</TableCell>
-            <TableCell sx={{ fontWeight: 'bold', color: '#4b3621' }}>Author Country</TableCell>
             <TableCell sx={{ fontWeight: 'bold', color: '#4b3621' }}>Publisher</TableCell>
-            <TableCell sx={{ fontWeight: 'bold', color: '#4b3621' }}>Publisher Establishment Year</TableCell>
-            <TableCell sx={{ fontWeight: 'bold', color: '#4b3621' }}>Publisher Address</TableCell>
             <TableCell sx={{ fontWeight: 'bold', color: '#4b3621' }}>Category</TableCell>
-            <TableCell sx={{ fontWeight: 'bold', color: '#4b3621' }}>Category Description</TableCell>
             <TableCell sx={{ fontWeight: 'bold', color: '#4b3621' }}>Actions</TableCell>
           </TableRow>
         </TableHead>
@@ -106,13 +226,8 @@ const Books = () => {
               <TableCell>{book.publicationYear}</TableCell>
               <TableCell>{book.stock}</TableCell>
               <TableCell>{book.author.name}</TableCell>
-              <TableCell>{book.author.birthDate}</TableCell>
-              <TableCell>{book.author.country}</TableCell>
               <TableCell>{book.publisher.name}</TableCell>
-              <TableCell>{book.publisher.establishmentYear}</TableCell>
-              <TableCell>{book.publisher.address}</TableCell>
-              <TableCell>{book.categories[0].name}</TableCell>
-              <TableCell>{book.categories[0].description}</TableCell>
+              <TableCell>{book.categories.map(category => category.name).join(', ')}</TableCell>
               <TableCell>
                 <Button 
                   onClick={() => handleOpenModal(book)} 
@@ -153,33 +268,80 @@ const Books = () => {
             margin="normal"
             sx={{ backgroundColor: '#fff', borderRadius: '5px' }}
           />
+          {/* Author Dropdown */}
+          <FormControl fullWidth margin="normal">
+            <InputLabel>Author</InputLabel>
+            <Select
+              name="authorId"
+              value={formState.authorId}
+              onChange={handleFormChange}
+              sx={{ backgroundColor: '#fff', borderRadius: '5px' }}
+            >
+              {authors.map((author) => (
+                <MenuItem key={author.id} value={author.id}>
+                  {author.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          {/* Publisher Dropdown */}
+          <FormControl fullWidth margin="normal">
+            <InputLabel>Publisher</InputLabel>
+            <Select
+              name="publisherId"
+              value={formState.publisherId}
+              onChange={handleFormChange}
+              sx={{ backgroundColor: '#fff', borderRadius: '5px' }}
+            >
+              {publishers.map((publisher) => (
+                <MenuItem key={publisher.id} value={publisher.id}>
+                  {publisher.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          {/* Category Checkbox */}
+          <Typography variant="h6" sx={{ marginTop: '20px', color: '#8b4513' }}>Select Categories</Typography>
+          {categories.map((category) => (
+            <FormControlLabel
+              key={category.id}
+              control={
+                <Checkbox
+                  checked={formState.selectedCategories.includes(category.id.toString())} // Checkbox'ın durumu
+                  onChange={handleCategoryChange} // Checkbox değiştiğinde bu fonksiyonu çağır
+                  value={category.id.toString()} // Checkbox'ın değeri
+                  color="primary"
+                />
+              }
+              label={category.name}
+            />
+
+          ))}
+
           <TextField
-            name="author"
-            label="Author"
-            value={formState.author}
+            name="publicationYear"
+            label="Publication Year"
+            value={formState.publicationYear}
             onChange={handleFormChange}
+            type="number"
             fullWidth
             margin="normal"
             sx={{ backgroundColor: '#fff', borderRadius: '5px' }}
           />
           <TextField
-            name="category"
-            label="Category"
-            value={formState.category}
+            name="stock"
+            label="Stock"
+            value={formState.stock}
             onChange={handleFormChange}
+            type="number"
             fullWidth
             margin="normal"
             sx={{ backgroundColor: '#fff', borderRadius: '5px' }}
           />
-          <TextField
-            name="publisher"
-            label="Publisher"
-            value={formState.publisher}
-            onChange={handleFormChange}
-            fullWidth
-            margin="normal"
-            sx={{ backgroundColor: '#fff', borderRadius: '5px' }}
-          />
+          {/* Validasyon mesajını göster */}
+          {validationMessage && <div style={{ color: 'red' }}>{validationMessage}</div>}
         </DialogContent>
         <DialogActions sx={{ backgroundColor: '#faf3e0' }}>
           <Button onClick={handleCloseModal} sx={{ color: '#8b4513' }}>Cancel</Button>
@@ -195,6 +357,13 @@ const Books = () => {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* Snackbar bileşeni */}
+      <Snackbar open={!!errorMessage} autoHideDuration={6000} onClose={handleCloseSnackbar}>
+        <Alert onClose={handleCloseSnackbar} severity="error">
+          {errorMessage}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };

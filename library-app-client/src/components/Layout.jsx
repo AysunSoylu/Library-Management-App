@@ -18,7 +18,7 @@ const menuItems = [
   { text: 'Categories', icon: <CategoryIcon />, path: '/categories' },
   { text: 'Books', icon: <BookIcon />, path: '/books' },
   { text: 'Authors', icon: <PeopleIcon />, path: '/authors' },
-  { text: 'Book Orders', icon: <ShoppingCartIcon />, path: '/book-orders' }
+  { text: 'Book Borrows', icon: <ShoppingCartIcon />, path: '/borrows' }
 ];
 
 const Layout = ({ children }) => {
